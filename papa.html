@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Are You Coming? 😂</title>
+  <style>
+    :root {
+      --bg1: #fff1f2;
+      --bg2: #ffe4e6;
+      --card: rgba(255, 255, 255, 0.78);
+      --text: #3f1d2e;
+      --muted: #7a4d63;
+      --pink: #ff4d8d;
+      --pink-dark: #e63d7c;
+      --purple: #8b5cf6;
+      --soft-shadow: 0 18px 45px rgba(255, 77, 141, 0.18);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.95), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(255, 192, 203, 0.45), transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      overflow-x: hidden;
+    }
+
+    .hearts,
+    .sparkles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .float {
+      position: absolute;
+      font-size: 22px;
+      opacity: 0.65;
+      animation: drift linear infinite;
+    }
+
+    @keyframes drift {
+      from {
+        transform: translateY(110vh) scale(0.8) rotate(0deg);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.7;
+      }
+      to {
+        transform: translateY(-20vh) scale(1.25) rotate(18deg);
+        opacity: 0;
+      }
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.6);
+      border-radius: var(--radius);
+      box-shadow: var(--soft-shadow);
+      padding: 24px 20px 22px;
+      text-align: center;
+      animation: popIn 0.45s ease;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 77, 141, 0.12);
+      color: var(--pink-dark);
+      font-weight: 700;
+      font-size: 0.86rem;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.9rem, 6vw, 2.55rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .sub {
+      margin: 10px auto 18px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.5;
+      max-width: 30ch;
+    }
+
+    .scene {
+      margin: 8px 0 18px;
+      min-height: 210px;
+      display: grid;
+      place-items: center;
+    }
+
+    .gif-wrap {
+      width: 100%;
+      display: grid;
+      place-items: center;
+    }
+
+    .gif {
+      width: min(100%, 270px);
+      aspect-ratio: 1 / 1;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.10);
+      background: linear-gradient(160deg, #fff, #ffe3ef);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .gif img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
+
+    .cute-bubble,
+    .smack-bubble {
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cute-bubble {
+      background: radial-gradient(circle at top, #fff, #ffd7e8 75%);
+    }
+
+    .smack-bubble {
+      background: radial-gradient(circle at top, #fff7ed, #ffe0cc 75%);
+    }
+
+    .emoji-stack {
+      display: grid;
+      gap: 6px;
+      place-items: center;
+      z-index: 2;
+    }
+
+    .main-emoji {
+      font-size: 4.1rem;
+      animation: bob 1.5s ease-in-out infinite;
+    }
+
+    .mini-emoji {
+      font-size: 1.3rem;
+      animation: blink 1.6s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.04); }
+    }
+
+    @keyframes blink {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.75; }
+    }
+
+    .burst,
+    .heartlet,
+    .comic {
+      position: absolute;
+      font-size: 1.4rem;
+      animation: floaty 2.8s ease-in-out infinite;
+      opacity: 0.9;
+    }
+
+    .heartlet:nth-child(1) { top: 18px; left: 18px; animation-delay: 0s; }
+    .heartlet:nth-child(2) { top: 30px; right: 28px; animation-delay: 0.4s; }
+    .heartlet:nth-child(3) { bottom: 28px; left: 30px; animation-delay: 0.8s; }
+    .heartlet:nth-child(4) { bottom: 18px; right: 20px; animation-delay: 1.2s; }
+
+    .comic:nth-child(1) { top: 18px; left: 20px; animation-delay: 0.1s; }
+    .comic:nth-child(2) { top: 28px; right: 20px; animation-delay: 0.6s; }
+    .comic:nth-child(3) { bottom: 22px; left: 26px; animation-delay: 1.1s; }
+    .comic:nth-child(4) { bottom: 14px; right: 20px; animation-delay: 1.5s; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(8deg); }
+    }
+
+    .buttons {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    button {
+      appearance: none;
+      border: 0;
+      border-radius: 18px;
+      padding: 15px 16px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+      min-height: 54px;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: white;
+      box-shadow: 0 14px 28px rgba(139, 92, 246, 0.25);
+    }
+
+    .secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .shake {
+      animation: shake 0.45s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(7px); }
+      75% { transform: translateX(-5px); }
+    }
+
+    .tiny {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 420px) {
+      .card {
+        padding: 20px 16px 18px;
+      }
+
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <main class="app">
+    <section class="card" id="card">
+      <div class="tag">💌 Mom’s Funny Check-In</div>
+      <h1 id="title">Patidev, are you coming? 🥺</h1>
+      <p class="sub" id="subtitle">A sweet message from wifey first... answer carefully, Patidev. 😌</p>
+
+      <div class="scene" id="scene">
+        <div class="gif-wrap">
+          <div class="gif" id="gifBox">
+            <img id="gifImage" alt="Funny reaction" />
+
+            <div class="placeholder" id="cutePlaceholder">
+              <div class="cute-bubble">
+                <span class="heartlet">💖</span>
+                <span class="heartlet">✨</span>
+                <span class="heartlet">🌸</span>
+                <span class="heartlet">💕</span>
+                <div class="emoji-stack">
+                  <div class="main-emoji">🥺</div>
+                  <div class="mini-emoji">👉🏽👈🏽</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="placeholder hidden" id="smackPlaceholder">
+              <div class="smack-bubble">
+                <span class="comic">💥</span>
+                <span class="comic">😳</span>
+                <span class="comic">👋</span>
+                <span class="comic">😂</span>
+                <div class="emoji-stack">
+                  <div class="main-emoji">😅</div>
+                  <div class="mini-emoji">“You wanna stay out tonight?”</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons" id="buttons"></div>
+      <p class="footer-note" id="footerNote">Made for maximum laughter and minimum arguments. 😇</p>
+    </section>
+  </main>
+
+  <script>
+    /*
+      OPTIONAL: Replace these with real GIF links if you want.
+      Leave them empty to use the built-in animated placeholders.
+
+      Example:
+      cuteGif: 'https://media.giphy.com/media/your-cute-gif.gif',
+      smackGif: 'https://media.giphy.com/media/your-funny-smack-gif.gif'
+    */
+    const GIFS = {
+      cuteGif: '',
+      smackGif: ''
+    };
+
+    const title = document.getElementById('title');
+    const subtitle = document.getElementById('subtitle');
+    const buttons = document.getElementById('buttons');
+    const footerNote = document.getElementById('footerNote');
+    const gifImage = document.getElementById('gifImage');
+    const cutePlaceholder = document.getElementById('cutePlaceholder');
+    const smackPlaceholder = document.getElementById('smackPlaceholder');
+    const card = document.getElementById('card');
+    const hearts = document.getElementById('hearts');
+
+    function spawnFloatingIcons() {
+      const icons = ['💖', '✨', '💕', '🌸', '😂'];
+      for (let i = 0; i < 14; i++) {
+        const el = document.createElement('span');
+        el.className = 'float';
+        el.textContent = icons[Math.floor(Math.random() * icons.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.animationDuration = (8 + Math.random() * 8) + 's';
+        el.style.animationDelay = (Math.random() * 8) + 's';
+        el.style.fontSize = (16 + Math.random() * 18) + 'px';
+        hearts.appendChild(el);
+      }
+    }
+
+    function useGif(url, mode) {
+      gifImage.style.display = 'none';
+      cutePlaceholder.classList.add('hidden');
+      smackPlaceholder.classList.add('hidden');
+
+      if (url) {
+        gifImage.src = url;
+        gifImage.style.display = 'block';
+      } else {
+        if (mode === 'cute') {
+          cutePlaceholder.classList.remove('hidden');
+        } else {
+          smackPlaceholder.classList.remove('hidden');
+        }
+      }
+    }
+
+    function shakeCard() {
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+    }
+
+    function setButtons(configs) {
+      buttons.innerHTML = '';
+      configs.forEach(cfg => {
+        const btn = document.createElement('button');
+        btn.textContent = cfg.label;
+        btn.className = cfg.type === 'secondary' ? 'secondary' : 'primary';
+        btn.addEventListener('click', cfg.onClick);
+        buttons.appendChild(btn);
+      });
+
+      if (configs.length === 2) {
+        const all = Array.from(buttons.children);
+        const row = document.createElement('div');
+        row.className = 'row';
+        row.appendChild(all[0]);
+        row.appendChild(all[1]);
+        buttons.innerHTML = '';
+        buttons.appendChild(row);
+      }
+    }
+
+    function screenOne() {
+      title.textContent = 'Patidev, are you coming? 🥺';
+      subtitle.textContent = 'A sweet message from wifey first... answer carefully, Patidev. 😌';
+      footerNote.textContent = 'Choose wisely, Patidev. Wifey energy is strong tonight. 😂';
+      useGif(GIFS.cuteGif, 'cute');
+
+      setButtons([
+        {
+          label: 'Yes 😇',
+          type: 'primary',
+          onClick: screenYes
+        },
+        {
+          label: 'No 😬',
+          type: 'secondary',
+          onClick: screenNoFirst
+        }
+      ]);
+    }
+
+    function screenNoFirst() {
+      shakeCard();
+      title.textContent = 'Oh really? 👀';
+      subtitle.textContent = 'Patidev, you wanna stay out tonight? 😂';
+      footerNote.textContent = 'That answer needs correction, Patidev.';
+      useGif(GIFS.smackGif, 'smack');
+
+      setButtons([
+        {
+          label: 'No no... I’m coming 😭',
+          type: 'primary',
+          onClick: screenFinalNo
+        }
+      ]);
+    }
+
+    function screenYes() {
+      title.textContent = 'Patidev, come fast! 🏃‍♂️💨';
+      subtitle.textContent = 'Wifey is waiting, Patidev. The faster you come, the safer you are. 😂❤️';
+      footerNote.textContent = 'Approved answer. Smart man.';
+      useGif(GIFS.cuteGif, 'cute');
+
+      setButtons([
+        {
+          label: 'Replay 🔁',
+          type: 'secondary',
+          onClick: screenOne
+        }
+      ]);
+    }
+
+    function screenFinalNo() {
+      title.textContent = 'Good answer. Now come home 😌';
+      subtitle.textContent = 'That’s better. Friends can wait, Patidev... your wife cannot. 😂💖';
+      footerNote.textContent = 'Mission successful.';
+      useGif(GIFS.cuteGif, 'cute');
+
+      setButtons([
+        {
+          label: 'Replay 🔁',
+          type: 'secondary',
+          onClick: screenOne
+        }
+      ]);
+    }
+
+    spawnFloatingIcons();
+    screenOne();
+  </script>
+</body>
+</html>
